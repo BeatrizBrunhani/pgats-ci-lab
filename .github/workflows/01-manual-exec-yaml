@@ -1,0 +1,38 @@
+#ci de nivel 01 - Disparo manual a ravés de clique
+
+name: 'Execução Manual'
+#rgras de disparo
+#gatilho manual, ou seja, o usuário tem que clicar para disparar a execução
+on:
+  workflow_dispatch:
+    
+#definição dos jobs
+jobs:
+  e2e-testes:
+  #maquina onde vai rodar o job
+    runs-on: ubuntu-latest
+    steps:
+    # clone do projeto
+      - uses: actions/checkout@v4
+      
+      # instalação do node
+      - name: 'Instalar Node.js'
+        uses: actions/setup-node@v4 
+        with:
+          node-version: '18'
+
+#instalação do yarn
+      - name: 'Instalar Yarn'
+        run: npm install -g yarn  
+
+      #instalação das dependências
+      - name: 'Instalar dependências'
+        run: yarn install 
+
+        #instalaçã dos Browser Drivers do playwright
+      - name: 'Instalar Browser Drivers do Playwright'
+        run: npx playwright install --with-deps   
+
+      #execução dos testes
+      - name: 'Executar testes e2e'
+        run: yarn run e2e
